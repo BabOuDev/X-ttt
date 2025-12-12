@@ -1,0 +1,435 @@
+// 3D Tic Tac Toe Styles
+
+#GameMain3D {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+
+  h1 {
+    margin-bottom: 20px;
+    color: #fff;
+  }
+
+  #game_stat {
+    margin-bottom: 20px;
+    text-align: center;
+
+    #game_stat_msg {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    #game_turn_msg {
+      font-size: 18px;
+      color: #aaa;
+    }
+  }
+
+  .canvas-wrapper {
+    width: 600px;
+    margin-bottom: 20px;
+  }
+
+  // Instructions above controls
+  .control-instructions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(50, 50, 70, 0.6);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: #ccc;
+
+    .instruction-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      .fa {
+        color: #4a9eff;
+        font-size: 13px;
+      }
+    }
+
+    .instruction-separator {
+      color: #666;
+      font-weight: bold;
+    }
+  }
+
+  // Controls positioned above canvas
+  .canvas-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background: rgba(30, 30, 46, 0.8);
+    border: 2px solid #4a4a4a;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 0;
+
+    .control-btn {
+      width: 32px;
+      height: 32px;
+      background: #4a4a4a;
+      border: 1px solid #666;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #5a5a5a;
+        border-color: #888;
+        transform: translateY(-2px);
+      }
+
+      &:active {
+        background: #3a3a3a;
+        transform: translateY(0);
+      }
+
+      &.center {
+        background: #666;
+      }
+
+      .fa {
+        margin: 0;
+      }
+    }
+
+    // Direction controls (left side)
+    .direction-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      align-items: center;
+
+      .horizontal-controls {
+        display: flex;
+        gap: 3px;
+      }
+    }
+
+    // Zoom controls (middle)
+    .zoom-controls {
+      display: flex;
+      gap: 6px;
+    }
+
+    // Rotate toggle (right side)
+    .rotate-control {
+      display: flex;
+    }
+  }
+
+  .three-canvas-container {
+    width: 600px;
+    height: 600px;
+    border: 2px solid #4a4a4a;
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+    background: #1a1a2e;
+    cursor: crosshair; // Left-click to play, right-click to rotate
+
+    canvas {
+      display: block;
+    }
+  }
+
+  // Mobile responsive
+  @media (max-width: 768px) {
+    padding: 10px;
+
+    .canvas-wrapper {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .control-instructions {
+      font-size: 11px;
+      padding: 6px 10px;
+      gap: 6px;
+      flex-wrap: wrap;
+
+      .instruction-item {
+        gap: 4px;
+
+        .fa {
+          font-size: 12px;
+        }
+      }
+    }
+
+    .canvas-controls {
+      padding: 8px;
+
+      .control-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+      }
+
+      .direction-controls {
+        gap: 2px;
+
+        .horizontal-controls {
+          gap: 2px;
+        }
+      }
+
+      .zoom-controls {
+        gap: 4px;
+      }
+    }
+
+    .three-canvas-container {
+      width: 100%;
+      max-width: 400px;
+      height: 400px;
+    }
+
+    h1 {
+      font-size: 24px;
+    }
+
+    #game_stat {
+      #game_stat_msg {
+        font-size: 20px;
+      }
+
+      #game_turn_msg {
+        font-size: 16px;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .canvas-wrapper {
+      max-width: 320px;
+    }
+
+    .control-instructions {
+      font-size: 10px;
+      padding: 5px 8px;
+      gap: 4px;
+
+      .instruction-item {
+        gap: 3px;
+
+        .fa {
+          font-size: 11px;
+        }
+      }
+
+      .instruction-separator {
+        display: none; // Hide separators on very small screens
+      }
+    }
+
+    .canvas-controls {
+      padding: 6px;
+
+      .control-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 11px;
+      }
+
+      .direction-controls {
+        gap: 2px;
+
+        .horizontal-controls {
+          gap: 2px;
+        }
+      }
+
+      .zoom-controls {
+        gap: 3px;
+      }
+    }
+
+    .three-canvas-container {
+      max-width: 320px;
+      height: 320px;
+    }
+
+    h1 {
+      font-size: 20px;
+    }
+
+    #game_stat {
+      #game_stat_msg {
+        font-size: 18px;
+      }
+
+      #game_turn_msg {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+// Game End Animations
+.game-end-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+// Win Animation - Confetti
+.confetti-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #ffd700;
+    animation: confetti-fall 3s linear forwards;
+    opacity: 1;
+
+    &:nth-child(2n) {
+      background: #ff6b6b;
+    }
+    &:nth-child(3n) {
+      background: #4ecdc4;
+    }
+    &:nth-child(4n) {
+      background: #45b7d1;
+    }
+    &:nth-child(5n) {
+      background: #96ceb4;
+    }
+    &:nth-child(6n) {
+      width: 8px;
+      height: 8px;
+    }
+    &:nth-child(7n) {
+      width: 12px;
+      height: 12px;
+    }
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+// Loss Animation - Dark overlay with falling particles
+.defeat-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%);
+  animation: defeat-fade-in 0.5s ease-out;
+
+  .defeat-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(100, 100, 150, 0.6);
+    border-radius: 50%;
+    animation: defeat-fall 2s linear forwards;
+  }
+}
+
+@keyframes defeat-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes defeat-fall {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+// Celebration text animation
+.celebration-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 72px;
+  font-weight: bold;
+  color: #ffd700;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.5);
+  animation: celebration-pop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  pointer-events: all;
+  z-index: 10000;
+}
+
+@keyframes celebration-pop {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+// Defeat text animation
+.defeat-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 56px;
+  font-weight: bold;
+  color: #888;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  animation: defeat-appear 0.8s ease-out;
+  pointer-events: all;
+  z-index: 10000;
+}
+
+@keyframes defeat-appear {
+  0% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}

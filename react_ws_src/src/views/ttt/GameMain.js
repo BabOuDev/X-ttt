@@ -31,7 +31,9 @@ export default class SetName extends Component {
 				cell_vals: {},
 				next_turn_ply: true,
 				game_play: true,
-				game_stat: 'Start game'
+				game_stat: 'Start game',
+				showWinAnimation: false,
+				showLossAnimation: false
 			}
 		else {
 			this.sock_start()
@@ -40,7 +42,9 @@ export default class SetName extends Component {
 				cell_vals: {},
 				next_turn_ply: true,
 				game_play: false,
-				game_stat: 'Connecting'
+				game_stat: 'Connecting',
+				showWinAnimation: false,
+				showLossAnimation: false
 			}
 		}
 	}
@@ -141,7 +145,27 @@ export default class SetName extends Component {
 					</table>
 				</div>
 
-				<button type='submit' onClick={this.end_game.bind(this)} className='button'><span>End Game <span className='fa fa-caret-right'></span></span></button>
+				<button type='submit' onClick={this.playAgain.bind(this)} className='button'><span>Play Again <span className='fa fa-refresh'></span></span></button>
+
+				{/* Win Animation */}
+				{this.state.showWinAnimation && (
+					<div className="game-end-animation">
+						<div className="celebration-text">🎉 You Win! 🎉</div>
+						<div className="confetti-container">
+							{this.createConfetti()}
+						</div>
+					</div>
+				)}
+
+				{/* Loss Animation */}
+				{this.state.showLossAnimation && (
+					<div className="game-end-animation">
+						<div className="defeat-text">You Lost</div>
+						<div className="defeat-container">
+							{this.createDefeatParticles()}
+						</div>
+					</div>
+				)}
 
 			</div>
 		)
@@ -304,9 +328,13 @@ export default class SetName extends Component {
 			TweenMax.killAll(true)
 			TweenMax.from('td.win', 1, {opacity: 0, ease: Linear.easeIn})
 
+			const playerWon = cell_vals[set[0]]=='x'
+
 			this.setState({
-				game_stat: (cell_vals[set[0]]=='x'?'You':'Opponent')+' win',
-				game_play: false
+				game_stat: (playerWon ?'You':'Opponent')+' win',
+				game_play: false,
+				showWinAnimation: playerWon,
+				showLossAnimation: !playerWon
 			})
 
 			this.socket && this.socket.disconnect();
@@ -328,6 +356,104 @@ export default class SetName extends Component {
 			})
 		}
 		
+	}
+
+//	------------------------	------------------------	------------------------
+//	GAME END ANIMATIONS
+//	------------------------	------------------------	------------------------
+
+	createConfetti() {
+		const confetti = []
+		const numConfetti = 100
+
+		for (let i = 0; i < numConfetti; i++) {
+			const left = Math.random() * 100
+			const animationDelay = Math.random() * 0.5
+			const animationDuration = 2 + Math.random() * 1
+
+			confetti.push(
+				<div
+					key={i}
+					className="confetti"
+					style={{
+						left: `${left}%`,
+						animationDelay: `${animationDelay}s`,
+						animationDuration: `${animationDuration}s`
+					}}
+				/>
+			)
+		}
+		return confetti
+	}
+
+	createDefeatParticles() {
+		const particles = []
+		const numParticles = 50
+
+		for (let i = 0; i < numParticles; i++) {
+			const left = Math.random() * 100
+			const animationDelay = Math.random() * 1
+			const animationDuration = 1.5 + Math.random() * 0.5
+
+			particles.push(
+				<div
+					key={i}
+					className="defeat-particle"
+					style={{
+						left: `${left}%`,
+						animationDelay: `${animationDelay}s`,
+						animationDuration: `${animationDuration}s`
+					}}
+				/>
+			)
+		}
+		return particles
+	}
+
+//	------------------------	------------------------	------------------------
+
+	playAgain () {
+		// Disconnect existing socket if any
+		if (this.socket) {
+			this.socket.disconnect()
+			this.socket = null
+		}
+
+		// Remove win class from all cells
+		for (let i = 1; i <= 9; i++) {
+			const cellRef = this.refs['c' + i]
+			if (cellRef) {
+				cellRef.classList.remove('win')
+			}
+		}
+
+		// Reset game state
+		if (this.props.game_type === 'live') {
+			// Reconnect for live mode
+			this.sock_start()
+			this.setState({
+				cell_vals: {},
+				next_turn_ply: true,
+				game_play: false,
+				game_stat: 'Connecting',
+				showWinAnimation: false,
+				showLossAnimation: false
+			})
+		} else {
+			// Reset for computer mode
+			this.setState({
+				cell_vals: {},
+				next_turn_ply: true,
+				game_play: true,
+				game_stat: 'Start game',
+				showWinAnimation: false,
+				showLossAnimation: false
+			})
+		}
+
+		// Re-animate board
+		TweenMax.from('#game_stat', 1, {display: 'none', opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeIn})
+		TweenMax.from('#game_board', 1, {display: 'none', opacity: 0, x:-200, y:-200, scaleX:0, scaleY:0, ease: Power4.easeIn})
 	}
 
 //	------------------------	------------------------	------------------------

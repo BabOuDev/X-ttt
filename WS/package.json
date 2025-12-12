@@ -9,6 +9,9 @@
 		"type": "git",
 		"url": "https://github.com/xims/X-ttt.git"
 	},
+	"engines": {
+		"node": "10.24.1"
+	},
 	"main": "Xttt.js",
 	"scripts": {
 		"start": "node Xttt.js",

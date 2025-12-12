@@ -717,6 +717,83 @@ export default class GameMain3D extends Component {
 	}
 
 //	------------------------	------------------------	------------------------
+//	AI EVALUATION METHODS
+//	------------------------	------------------------	------------------------
+
+	evaluateMove (cell_vals, cell_id, player) {
+		let score = 0
+
+		// Check each win set that includes this cell
+		for (let i = 0; i < this.win_sets.length; i++) {
+			const set = this.win_sets[i]
+
+			// Only evaluate sets that include this cell
+			if (!set.includes(cell_id)) continue
+
+			const vals = [cell_vals[set[0]], cell_vals[set[1]], cell_vals[set[2]]]
+			const oCount = vals.filter(v => v === 'o').length
+			const xCount = vals.filter(v => v === 'x').length
+			const emptyCount = vals.filter(v => !v).length
+
+			if (player === 'o') {
+				// IMMEDIATE WIN: Two O's and this is the empty spot
+				if (oCount === 2 && emptyCount === 1) {
+					return 1000
+				}
+				// BLOCK OPPONENT WIN: Two X's and this is the empty spot
+				if (xCount === 2 && emptyCount === 1) {
+					return 900  // Must block!
+				}
+				// Setup future win: One O and two empty
+				if (oCount === 1 && emptyCount === 2) {
+					score += 10
+				}
+				// Empty line (potential)
+				if (oCount === 0 && xCount === 0) {
+					score += 3
+				}
+			}
+		}
+
+		// Positional bonuses for 3D
+		if (cell_id === 'c1-1-1') score += 50  // Center of cube
+		const faceCenters = ['c0-1-1', 'c2-1-1', 'c1-0-1', 'c1-2-1', 'c1-1-0', 'c1-1-2']
+		if (faceCenters.includes(cell_id)) score += 35  // Face centers
+		const corners = ['c0-0-0', 'c0-0-2', 'c0-2-0', 'c0-2-2', 'c2-0-0', 'c2-0-2', 'c2-2-0', 'c2-2-2']
+		if (corners.includes(cell_id)) score += 25  // Corners
+
+		return score
+	}
+
+	getBestMoves (cell_vals, empty_cells) {
+		const difficulty = this.props.difficulty || 'easy'
+
+		if (difficulty === 'easy') {
+			// Random move
+			return [rand_arr_elem(empty_cells)]
+		}
+
+		// Evaluate all possible moves
+		const moves = empty_cells.map(cell => ({
+			cell,
+			score: this.evaluateMove(cell_vals, cell, 'o')
+		}))
+
+		// Sort by score descending
+		moves.sort((a, b) => b.score - a.score)
+
+		if (difficulty === 'hard') {
+			// Return best move(s) - might be multiple with same score
+			const bestScore = moves[0].score
+			return moves.filter(m => m.score === bestScore).map(m => m.cell)
+		} else { // medium
+			// Return top 2 moves
+			const topMoves = moves.slice(0, Math.min(2, moves.length))
+			return topMoves.map(m => m.cell)
+		}
+	}
+
+//	------------------------	------------------------	------------------------
 
 	turn_comp () {
 		let { cell_vals } = this.state
@@ -736,7 +813,9 @@ export default class GameMain3D extends Component {
 
 		if (empty_cells.length === 0) return
 
-		const cell_id = rand_arr_elem(empty_cells)
+		// Get best moves based on difficulty
+		const bestMoves = this.getBestMoves(cell_vals, empty_cells)
+		const cell_id = rand_arr_elem(bestMoves)  // Pick randomly from best moves
 		const [x, y, z] = idToCoords(cell_id)
 
 		cell_vals[cell_id] = 'o'

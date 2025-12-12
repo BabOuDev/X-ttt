@@ -214,6 +214,80 @@ export default class SetName extends Component {
 	}
 
 //	------------------------	------------------------	------------------------
+//	AI EVALUATION METHODS
+//	------------------------	------------------------	------------------------
+
+	evaluateMove (cell_vals, cell_id, player) {
+		let score = 0
+
+		// Check each win set that includes this cell
+		for (let i = 0; i < this.win_sets.length; i++) {
+			const set = this.win_sets[i]
+
+			// Only evaluate sets that include this cell
+			if (!set.includes(cell_id)) continue
+
+			const vals = [cell_vals[set[0]], cell_vals[set[1]], cell_vals[set[2]]]
+			const oCount = vals.filter(v => v === 'o').length
+			const xCount = vals.filter(v => v === 'x').length
+			const emptyCount = vals.filter(v => !v).length
+
+			if (player === 'o') {
+				// IMMEDIATE WIN: Two O's and this is the empty spot
+				if (oCount === 2 && emptyCount === 1) {
+					return 1000
+				}
+				// BLOCK OPPONENT WIN: Two X's and this is the empty spot
+				if (xCount === 2 && emptyCount === 1) {
+					return 900  // Must block!
+				}
+				// Setup future win: One O and two empty
+				if (oCount === 1 && emptyCount === 2) {
+					score += 10
+				}
+				// Empty line (potential)
+				if (oCount === 0 && xCount === 0) {
+					score += 3
+				}
+			}
+		}
+
+		// Positional bonuses
+		if (cell_id === 'c5') score += 30  // Center
+		if (['c1', 'c3', 'c7', 'c9'].includes(cell_id)) score += 20  // Corners
+
+		return score
+	}
+
+	getBestMoves (cell_vals, empty_cells) {
+		const difficulty = this.props.difficulty || 'easy'
+
+		if (difficulty === 'easy') {
+			// Random move
+			return [rand_arr_elem(empty_cells)]
+		}
+
+		// Evaluate all possible moves
+		const moves = empty_cells.map(cell => ({
+			cell,
+			score: this.evaluateMove(cell_vals, cell, 'o')
+		}))
+
+		// Sort by score descending
+		moves.sort((a, b) => b.score - a.score)
+
+		if (difficulty === 'hard') {
+			// Return best move(s) - might be multiple with same score
+			const bestScore = moves[0].score
+			return moves.filter(m => m.score === bestScore).map(m => m.cell)
+		} else { // medium
+			// Return top 2 moves
+			const topMoves = moves.slice(0, Math.min(2, moves.length))
+			return topMoves.map(m => m.cell)
+		}
+	}
+
+//	------------------------	------------------------	------------------------
 
 	turn_comp () {
 
@@ -221,11 +295,13 @@ export default class SetName extends Component {
 		let empty_cells_arr = []
 
 
-		for (let i=1; i<=9; i++) 
+		for (let i=1; i<=9; i++)
 			!cell_vals['c'+i] && empty_cells_arr.push('c'+i)
-		// console.log(cell_vals, empty_cells_arr, rand_arr_elem(empty_cells_arr))
 
-		const c = rand_arr_elem(empty_cells_arr)
+		// Get best moves based on difficulty
+		const bestMoves = this.getBestMoves(cell_vals, empty_cells_arr)
+		const c = rand_arr_elem(bestMoves)  // Pick randomly from best moves
+
 		cell_vals[c] = 'o'
 
 		TweenMax.from(this.refs[c], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})

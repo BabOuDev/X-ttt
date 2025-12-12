@@ -21,7 +21,7 @@ export default class Ttt extends Component {
 
 	render () {
 
-		const {game_step, game_type, game_dimension} = this.state
+		const {game_step, game_type, game_dimension, difficulty} = this.state
 
 		console.log(game_step)
 
@@ -43,10 +43,12 @@ export default class Ttt extends Component {
 													/>}
 					{game_step == 'start_game' && game_dimension == '2d' && <GameMain
 														game_type={game_type}
+														difficulty={difficulty}
 														onEndGame={this.gameEnd.bind(this)}
 													/>}
 					{game_step == 'start_game' && game_dimension == '3d' && <GameMain3D
 														game_type={game_type}
+														difficulty={difficulty}
 														onEndGame={this.gameEnd.bind(this)}
 													/>}
 
@@ -66,9 +68,10 @@ export default class Ttt extends Component {
 
 //	------------------------	------------------------	------------------------
 
-	saveGameType (t, d) {
+	saveGameType (t, d, difficulty) {
 		this.state.game_type = t
 		this.state.game_dimension = d
+		this.state.difficulty = difficulty || 'easy'
 
 		this.upd_game_step()
 	}

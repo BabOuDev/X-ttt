@@ -20,6 +20,8 @@ A full-featured multiplayer tic-tac-toe game web app built with React.js and Nod
 - **Win Animation** - Colorful confetti celebration with victory text
 - **Loss Animation** - Atmospheric defeat effect
 
+![img.png](img.png)
+
 ## 🛠️ Tech Stack
 
 Major libraries used on front end:

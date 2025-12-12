@@ -595,20 +595,6 @@ export default class GameMain3D extends Component {
 
           <div className="three-canvas-container" ref={el => this.mount = el} />
 
-					{/* Instructions */}
-					<div className="control-instructions">
-						<span className="instruction-item">
-							<span className="fa fa-mouse-pointer"></span> Left-click cells to play
-						</span>
-						<span className="instruction-separator">•</span>
-						<span className="instruction-item">
-							<span className="fa fa-hand-rock-o"></span> Right-click + drag to rotate
-						</span>
-						<span className="instruction-separator">•</span>
-						<span className="instruction-item">
-							<span className="fa fa-arrows"></span> Use buttons for 90° turns
-						</span>
-					</div>
 
 					{/* Camera Controls - Above Canvas */}
 					<div className="canvas-controls">
@@ -650,6 +636,21 @@ export default class GameMain3D extends Component {
 							</button>
 						</div>
 					</div>
+
+          {/* Instructions */}
+          <div className="control-instructions">
+						<span className="instruction-item">
+							<span className="fa fa-mouse-pointer"></span> Left-click cells to play
+						</span>
+            <span className="instruction-separator">•</span>
+            <span className="instruction-item">
+							<span className="fa fa-hand-rock-o"></span> Right-click + drag to rotate
+						</span>
+            <span className="instruction-separator">•</span>
+            <span className="instruction-item">
+							<span className="fa fa-arrows"></span> Use buttons for 90° turns
+						</span>
+          </div>
 				</div>
 
 				<button type='submit' onClick={this.playAgain.bind(this)} className='button'>
